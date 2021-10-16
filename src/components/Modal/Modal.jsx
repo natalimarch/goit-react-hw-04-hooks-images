@@ -1,16 +1,19 @@
 import styles from "../Modal/Modal.module.css";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
 
 const modal = document.querySelector("#modal-root");
 
 const Modal = ({ onClose, children }) => {
-  const onEsc = (e) => {
-    if (e.code === "Escape") {
-      onClose();
-    }
-  };
+  const onEsc = useCallback(
+    (e) => {
+      if (e.code === "Escape") {
+        onClose();
+      }
+    },
+    [onClose]
+  );
 
   const onBackdrop = (e) => {
     if (e.currentTarget === e.target) {
@@ -23,7 +26,7 @@ const Modal = ({ onClose, children }) => {
     return () => {
       window.removeEventListener("keydown", onEsc);
     };
-  });
+  }, [onEsc]);
 
   return createPortal(
     <div className={styles.Overlay} onClick={onBackdrop}>
